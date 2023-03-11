@@ -29,6 +29,9 @@ public abstract class AbstractMapService <T, ID>{ //As implementation will be sa
 
 }
 
+//SpringBoot provides this structure ready, but better to know what's going behind the scene.
+//If we can somehow highlight this structure on Interview would be very professional.
+
 /*
 We are on Service Impl stage now.
  */
