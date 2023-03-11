@@ -4,10 +4,9 @@ import com.cydeo.dto.UserDTO;
 
 import java.util.List;
 
-public interface UserService {
+public interface UserService extends CrudService <UserDTO, String>{ // 1st parameter whatever object you are working with, 2nd Parameter UserName which is String.
 
-    UserDTO save (UserDTO user);
-    UserDTO findById (String username);
-    List<UserDTO> findAll ();
-    void deleteById (String username);
+    //if something is unique for Service, we can create here.
+    //in CrudService is only for common methods.
+
 }
