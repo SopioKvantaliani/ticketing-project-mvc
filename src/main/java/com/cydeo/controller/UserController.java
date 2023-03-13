@@ -47,4 +47,13 @@ public class UserController {
 
     }
 
+    /*
+    If we redirect link and say "redirect:/user/create" we don't need Model interface and all the model.addAttributes.
+    The only thing we need to do is to call method =  userService.save(user), to save users from UI.
+    Why we pass @ModelAttribute ("user"), because 'save()' method requires user object.
+
+    We use @ModelAttribute("user") ---> to bring 'user' object field in this method.
+
+     */
+
 }
