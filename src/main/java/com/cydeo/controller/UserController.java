@@ -43,7 +43,7 @@ public class UserController {
 
     }
 
-      @GetMapping("/update/{username}") //{username} is path-variable and we need to pass as parameter.
+      @GetMapping("/update/{username}") //{username} is path-variable, and we need to pass as parameter.
       public String editUser (@PathVariable ("username") String username, Model model){ //We use String because we need to return view. Always String
 
         //(user object, roles, users. So we can redirect and add edit functionality)

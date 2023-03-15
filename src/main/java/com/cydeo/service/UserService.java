@@ -9,4 +9,7 @@ public interface UserService extends CrudService <UserDTO, String>{ // 1st param
     //if something is unique for Service, we can create here.
     //in CrudService is only for common methods.
 
+    List<UserDTO> findManagers ();
+
+
 }

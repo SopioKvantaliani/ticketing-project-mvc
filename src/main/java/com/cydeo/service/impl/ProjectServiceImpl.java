@@ -1,6 +1,7 @@
 package com.cydeo.service.impl;
 
 import com.cydeo.dto.ProjectDTO;
+import com.cydeo.enums.Status;
 import com.cydeo.service.ProjectService;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +12,9 @@ public class ProjectServiceImpl extends AbstractMapService <ProjectDTO, String> 
 
     @Override
     public ProjectDTO save(ProjectDTO project) {
+
+        if(project.getProjectStatus()==null) //we add condition, otherwise all projects would have "Open" Status
+        project.setProjectStatus(Status.OPEN); //whenever we save new project status will be "Open"
         return super.save(project.getProjectCode(), project);
     }
 
