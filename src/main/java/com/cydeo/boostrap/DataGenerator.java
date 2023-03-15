@@ -1,24 +1,29 @@
 package com.cydeo.boostrap;
 
+import com.cydeo.dto.ProjectDTO;
 import com.cydeo.dto.RoleDTO;
 import com.cydeo.dto.UserDTO;
 import com.cydeo.enums.Gender;
+import com.cydeo.enums.Status;
+import com.cydeo.service.ProjectService;
 import com.cydeo.service.RoleService;
 import com.cydeo.service.UserService;
-import com.cydeo.service.impl.RoleServiceImpl;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
 
 @Service //like @Component = creates bean; same as Component just using for Service classes.
 public class DataGenerator implements CommandLineRunner {
 
-    private RoleService roleService;
+    private final RoleService roleService;
     private final UserService userService;
+    private final ProjectService projectService;
 
-    public DataGenerator(RoleService roleService, UserService userService) {
+    public DataGenerator(RoleService roleService, UserService userService, ProjectService projectService) {
         this.roleService = roleService;
         this.userService = userService;
+        this.projectService = projectService;
     }
 
     @Override
@@ -28,7 +33,7 @@ public class DataGenerator implements CommandLineRunner {
         RoleDTO managerRole = new RoleDTO(2L, "Manager"); //Adding roles in DataBase;
         RoleDTO employeeRole = new RoleDTO(3L, "Employee"); //Adding roles in DataBase;
 
-        roleService.save(adminRole);
+        roleService.save(adminRole); //business logic we wrote
         roleService.save(managerRole);
         roleService.save(employeeRole);
 
@@ -50,7 +55,7 @@ public class DataGenerator implements CommandLineRunner {
                 "Matt", "bill@cydeo.com", "Abc4", true, "8881239846", employeeRole, Gender.MALE);
 
 
-        userService.save(user1);
+        userService.save(user1); //business logic we wrote
         userService.save(user2);
         userService.save(user3);
         userService.save(user4);
@@ -59,6 +64,14 @@ public class DataGenerator implements CommandLineRunner {
         userService.save(user7);
         userService.save(user8);
 
+
+        ProjectDTO project1 = new ProjectDTO("Spring MVC", "PR001", user1, LocalDate.now(), LocalDate.now().plusDays(25), "Creating Controllers", Status.OPEN);
+        ProjectDTO project2 = new ProjectDTO("Spring ORM", "PR002", user2, LocalDate.now(), LocalDate.now().plusDays(10), "Creating Database", Status.IN_PROGRESS);
+        ProjectDTO project3 = new ProjectDTO("Spring Container", "PR003", user1, LocalDate.now(), LocalDate.now().plusDays(32), "Creating Container", Status.IN_PROGRESS);
+
+        projectService.save(project1);
+        projectService.save(project2);
+        projectService.save(project3);
     }
 }
 

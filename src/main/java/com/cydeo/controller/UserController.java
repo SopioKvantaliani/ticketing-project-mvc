@@ -5,10 +5,7 @@ import com.cydeo.service.RoleService;
 import com.cydeo.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/user")
@@ -33,17 +30,33 @@ public class UserController {
     }
 
     @PostMapping("/create")
-
     public String insertUser (@ModelAttribute ("user") UserDTO user,  Model model){
 
         //(user object, roles, users)
 
     model.addAttribute("user", new UserDTO()); //when we click on the save, this method executes, we need empty form. User object gone;
     model.addAttribute("roles", roleService.findAll());  //We want to see roles in the form; roles gone
-        userService.save(user);
+    userService.save(user);
     model.addAttribute("users", userService.findAll()); //users gone
 
         return "/user/create";  // We provide in the method all the attributes whatever this view provides.
+
+    }
+
+      @GetMapping("/update/{username}") //{username} is path-variable and we need to pass as parameter.
+      public String editUser (@PathVariable ("username") String username, Model model){ //We use String because we need to return view. Always String
+
+        //(user object, roles, users. So we can redirect and add edit functionality)
+          model.addAttribute("user", userService.findById(username));
+          model.addAttribute("roles", roleService.findAll());
+          model.addAttribute("users", userService.findAll()); //users are the list of user objects.
+        /*
+        "username" should come from UI side, that's why we need to use either query parameter, or Path-variable
+        When we click 'update' we don't post anything, we're just retrieving data, that's why we need to use
+        @GetMapping and @PathVariable.
+         */
+
+        return "/user/update";  //firstly we need to figure out what will be the return type view, because view decides what we need inside the method.
 
     }
 
@@ -54,6 +67,34 @@ public class UserController {
 
     We use @ModelAttribute("user") ---> to bring 'user' object field in this method.
 
+    Anything that is related to User we should build inside the userController.
+
      */
+
+
+    @PostMapping ("/update")
+    public String updateUser(@ModelAttribute("user") UserDTO user){ //I am saying, I want to use "user" attribute inside userService.update method
+
+       // update that user
+        //Do we have Service to update user?
+
+        userService.update(user);
+
+        return "redirect:/user/create"; //redirecting because after update we need empty userName;
+
+        /*
+        @ModelAttribute is inside your Java Code and gives you right to use any attributes inside the java Code.
+        Here we say that, we need to use 'user' attribute inside Java code;
+        eg. 'user' here hold attribute when we click for update, before saving.
+         */
+    }
+
+    @GetMapping("/delete/{username}") //which object we are deleting? that's why we need to put here username
+    public String deleteUser (@PathVariable ("username") String username){
+
+        userService.deleteById(username);
+
+        return "redirect:/user/create";
+    }
 
 }

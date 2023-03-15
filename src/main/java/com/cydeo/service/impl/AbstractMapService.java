@@ -27,6 +27,10 @@ public abstract class AbstractMapService <T, ID>{ //As implementation will be sa
         map.remove(id);
     }
 
+    void update (ID id, T object){
+        map.put(id, object);
+    }
+
 }
 
 //SpringBoot provides this structure ready, but better to know what's going behind the scene.

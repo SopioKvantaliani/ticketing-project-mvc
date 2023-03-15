@@ -1,6 +1,5 @@
 package com.cydeo.converter;
 
-import com.cydeo.boostrap.DataGenerator;
 import com.cydeo.dto.RoleDTO;
 import com.cydeo.service.RoleService;
 import org.springframework.boot.context.properties.ConfigurationPropertiesBinding;
