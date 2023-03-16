@@ -35,6 +35,18 @@ public class ProjectServiceImpl extends AbstractMapService <ProjectDTO, String> 
 
     @Override
     public void update(ProjectDTO object) {
+        if(object.getProjectStatus()==null){
+            //when we try to update in the form, this project has status in the database, it shouldn't be null.
+            //that's why I need to catch this status and keep the same one after updating.
+            //go to database, find project by ID and getProjectStatus and set whatever you are updating;
+            object.setProjectStatus(findById(object.getProjectCode()).getProjectStatus());
+        }
         super.update(object.getProjectCode(), object);
+    }
+
+    @Override
+    public void complete(ProjectDTO project) {
+        project.setProjectStatus(Status.COMPLETE);
+
     }
 }

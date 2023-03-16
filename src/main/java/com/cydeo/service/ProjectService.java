@@ -6,4 +6,6 @@ public interface ProjectService extends CrudService <ProjectDTO, String>{
 
     //why String? We pass String because we need unique id to catch projects.
 
+    void complete (ProjectDTO project);
+
 }
