@@ -7,10 +7,7 @@ import com.cydeo.service.TaskService;
 import com.cydeo.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/task")
@@ -52,4 +49,38 @@ public class TaskController {
 
         return "redirect:/task/create";
     }
+    @GetMapping("/update/{taskId}")
+    public String editTask(@PathVariable("taskId") Long taskId, Model model) {
+
+        model.addAttribute("task", taskService.findById(taskId));
+        model.addAttribute("projects", projectService.findAll());
+        model.addAttribute("employees", userService.findEmployees());
+        model.addAttribute("tasks", taskService.findAll());
+
+        return "/task/update";
+
+    }
+//    @PostMapping("/update/{taskId}")
+//    public String updateTask(@PathVariable ("taskId") Long taskId, TaskDTO task){ //TaskDTO task is the object we try to update;
+//
+//        task.setId(taskId);
+//        /*
+//        this code before updating object set's the same Id from the old object and than
+//        we save the overwritten version of task.
+//         */
+//        taskService.update(task);
+//
+//        return "/task/create";
+//    }
+    /*
+    when we set object we overwrite all the information. In order to catch the ID of the task and to set the same ID to the
+    new object, developer decided to capture ID {taskID} and assigns the same one to the updated new object.
+     */
+
+    @PostMapping("/update/{id}")
+    public String updateTask (TaskDTO task){
+        taskService.update(task);
+        return "redirect:/task/create";
+    }
+
 }
