@@ -24,7 +24,22 @@ public class ProjectDTO {
    private String projectDetail;
    private Status projectStatus;
 
+   private int completeTaskCounts; //HTML file requests and this fields and we need to add.
+   private int unfinishedTaskCounts;
+
+   public ProjectDTO(String projectName, String projectCode, UserDTO assignedManager, LocalDate startDate, LocalDate endDate, String projectDetail, Status projectStatus) {
+      this.projectName = projectName;
+      this.projectCode = projectCode;
+      this.assignedManager = assignedManager;
+      this.startDate = startDate;
+      this.endDate = endDate;
+      this.projectDetail = projectDetail;
+      this.projectStatus = projectStatus;
+   }
 }
 /*
-We use time formatter because Spring uses different format than the LocalDate method and need to be matched.
+1. We use time formatter because Spring uses different format than the LocalDate method and need to be matched.
+
+2. As we added 2 field complete and unfinished tasks, we added new constructor without these two fields. why?
+because to protect our program from crash, we need new constructor as it was before adding these fields.
  */

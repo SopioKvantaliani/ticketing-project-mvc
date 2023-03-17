@@ -9,6 +9,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/project")
 public class ProjectController {
@@ -76,6 +78,23 @@ public class ProjectController {
 
         projectService.update(project);
         return "redirect:/project/create";
+    }
+
+    @GetMapping("/manager/project-status")
+    public String getProjectByManager (Model model){
+
+        UserDTO manager = userService.findById("john@cydeo.com"
+        );
+        //because we don't have security mechanism and we are putting hardcoded.
+
+        //Which project we need to display?
+        //We declared two new fields in ProjectDTO and now we need new service for that.
+        //And herewith, we want to display only projects under these manager john@cydeo.com and we pass as parameter in the method;
+        List<ProjectDTO> projects = projectService.getCountedListOfProjectDTO(manager);
+
+        model.addAttribute("projects", projects);
+
+        return "/manager/project-status";
     }
 
 

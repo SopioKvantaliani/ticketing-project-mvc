@@ -1,14 +1,24 @@
 package com.cydeo.service.impl;
 
 import com.cydeo.dto.ProjectDTO;
+import com.cydeo.dto.TaskDTO;
+import com.cydeo.dto.UserDTO;
 import com.cydeo.enums.Status;
 import com.cydeo.service.ProjectService;
+import com.cydeo.service.TaskService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProjectServiceImpl extends AbstractMapService <ProjectDTO, String>  implements ProjectService {
+
+    private final TaskService taskService;
+
+    public ProjectServiceImpl(TaskService taskService) {
+        this.taskService = taskService;
+    }
 
     @Override
     public ProjectDTO save(ProjectDTO project) {
@@ -49,4 +59,37 @@ public class ProjectServiceImpl extends AbstractMapService <ProjectDTO, String> 
         project.setProjectStatus(Status.COMPLETE);
 
     }
+
+    @Override
+    public List<ProjectDTO> getCountedListOfProjectDTO(UserDTO manager) {
+        List<ProjectDTO> projectList =
+                findAll()
+                        .stream()
+                        .filter(project->project.getAssignedManager().equals(manager))
+                        .map(project -> {
+
+                            List<TaskDTO> taskList = taskService.findTasksByManager(manager);
+                            int completeTaskCounts = (int) taskList.stream() //we need to cast, because count method returns Long Always;
+                                    .filter(task->task.getProject()
+                                            .equals(project) && task.getTaskStatus()==Status.COMPLETE ).count();
+                            int unfinishedTaskCounts = (int)taskList.stream()
+                                    .filter(task->task.getProject()
+                                            .equals(project) && task.getTaskStatus()!=Status.COMPLETE).count();//not equals
+
+                            project.setCompleteTaskCounts(completeTaskCounts);
+                            project.setUnfinishedTaskCounts(unfinishedTaskCounts);
+
+                            return project; //As we did inside curly braces it looks return;
+
+                        })
+                        .collect(Collectors.toList());
+        return projectList;
+
+        /*
+        "projectList" coming from database doesn't have complete and unfinished task fields. That's why
+        we tell Map "do something to this object, something what? set the fields".
+         */
+    }
+
+
 }
