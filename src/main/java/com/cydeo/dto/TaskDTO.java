@@ -13,12 +13,12 @@ import java.time.LocalDate;
 public class TaskDTO {
 
     private Long id;
-    private ProjectDTO project;
-    private UserDTO user;
+    private ProjectDTO project; //will need converter
+    private UserDTO assignedEmployee; //will need converter as they are object and from method comes Spring.
     private String taskSubject;
     private String taskDetail;
     private Status taskStatus;
-    private LocalDate assignDate;
+    private LocalDate assignedDate;
 
 
 

@@ -10,4 +10,5 @@ public interface UserService extends CrudService <UserDTO, String> { // 1st para
     //in CrudService is only for common methods.
 
     List<UserDTO> findManagers();
+    List<UserDTO> findEmployees();
 }
