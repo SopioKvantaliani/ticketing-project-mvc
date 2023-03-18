@@ -2,9 +2,11 @@ package com.cydeo.controller;
 
 import com.cydeo.dto.ProjectDTO;
 import com.cydeo.dto.TaskDTO;
+import com.cydeo.enums.Status;
 import com.cydeo.service.ProjectService;
 import com.cydeo.service.TaskService;
 import com.cydeo.service.UserService;
+import org.springframework.scheduling.config.Task;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -82,5 +84,47 @@ public class TaskController {
         taskService.update(task);
         return "redirect:/task/create";
     }
+    /*
+    This method posting some data, tasks. As tasks are coming from form, we don't use @PathVariable to catch id.
+    Spring knows and manages itself.
+     */
+
+    @GetMapping("/employee/pending-tasks")
+    public String employeePendingTasks(Model model) {
+        model.addAttribute("tasks", taskService.findAllTasksByStatusIsNot(Status.COMPLETE));
+        return "/task/pending-tasks";
+    }
+
+
+    @GetMapping("/employee/archive")
+    public String employeeArchivedTasks(Model model) {
+        model.addAttribute("tasks", taskService.findAllTasksByStatus(Status.COMPLETE));
+        return "/task/archive";
+    }
+    @GetMapping("/employee/edit/{id}")
+    public String employeeEditTask(@PathVariable Long id, Model model){
+
+        model.addAttribute("task", taskService.findById(id));
+//        model.addAttribute("projects", projectService.findAll());
+//        model.addAttribute("employees", userService.findEmployees());
+        model.addAttribute("statuses", Status.values());//values is Enum ready method and displays all the statuses
+        model.addAttribute("tasks", taskService.findAllTasksByStatusIsNot(Status.COMPLETE));
+
+        return "/task/status-update";
+
+            /*
+    Here we don't have any form, we don't send any object to the UI, so we need to use @PathVariable and catch
+    the id like that.
+     */
+    }
+ @PostMapping("/employee/update/{id}")
+ public String employeeUpdateTask (TaskDTO task){
+       taskService.updateStatus(task);
+       return "redirect:/task/employee/pending-tasks";
+
+ }
 
 }
+
+
+

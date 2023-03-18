@@ -17,20 +17,24 @@ public class TaskServiceImpl extends AbstractMapService <TaskDTO, Long> implemen
 
 
     @Override
-    public TaskDTO save(TaskDTO task) {
-        if (task.getTaskStatus()==null )
+    public TaskDTO save(TaskDTO task) { //task is new task we try to overwrite;
+
+        if(task.getTaskStatus() == null)
             task.setTaskStatus(Status.OPEN);
-        if (task.getAssignedDate()==null)
+
+        if(task.getAssignedDate() == null)
             task.setAssignedDate(LocalDate.now());
 
-        if (task.getId()==null){
-            task.setId(UUID.randomUUID().getLeastSignificantBits());
-            /*When we create a new task it we doesn't assign Id, but when we delete or update, we need Id, otherwise
+        if(task.getId()==null)
+            task.setId(UUID.randomUUID().getMostSignificantBits());
+
+        return super.save(task.getId(),task);
+
+            /*When we create a new task we doesn't assign Id, but when we delete or update, we need Id, otherwise
             it will give us error.*/
         }
 
-        return super.save(task.getId(), task);
-    }
+
 
     @Override
     public TaskDTO findById(Long id) {
@@ -48,11 +52,11 @@ public class TaskServiceImpl extends AbstractMapService <TaskDTO, Long> implemen
     }
 
     @Override
-    public void update(TaskDTO task) {
+    public void update(TaskDTO task) {//task is new task we try to overwrite;
 
-        TaskDTO foundTask = findById(task.getId());
+        TaskDTO foundTask = findById(task.getId());//Old Task that was in the system;
 
-        task.setTaskStatus(foundTask.getTaskStatus());
+        task.setTaskStatus(foundTask.getTaskStatus());//setting for the new task. we are not changing current status.
         task.setAssignedDate(foundTask.getAssignedDate());
 
         super.update(task.getId(),task);
@@ -69,5 +73,26 @@ public class TaskServiceImpl extends AbstractMapService <TaskDTO, Long> implemen
         bring all projects, put in stream, filter all tasks, get project, get assigned manager equals to "manager",
         which means any manager we are looking;
          */
+    }
+
+    @Override
+    public List<TaskDTO> findAllTasksByStatusIsNot(Status status) {
+
+        return findAll().stream().filter(task->!task.getTaskStatus().equals((status))).collect(Collectors.toList());
+        //find all tasks and filter tasks that does not have "status" (means complete status);
+    }
+
+    @Override
+    public List<TaskDTO> findAllTasksByStatus(Status status) {
+        return findAll().stream().filter(task->task.getTaskStatus().equals((status))).collect(Collectors.toList());
+    }
+
+    @Override
+    public void updateStatus(TaskDTO task) {
+        findById(task.getId()).setTaskStatus(task.getTaskStatus());
+        /*We are changing old status first, and then we use update;
+        In this code we took Task status, updated and put it back.
+         */
+        update(task); //Here we update task with new status.
     }
 }
