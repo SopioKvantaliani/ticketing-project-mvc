@@ -3,9 +3,13 @@ package com.cydeo.controller;
 import com.cydeo.dto.UserDTO;
 import com.cydeo.service.RoleService;
 import com.cydeo.service.UserService;
+import org.springframework.boot.Banner;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/user")
@@ -30,8 +34,12 @@ public class UserController {
     }
 
     @PostMapping("/create")
-    public String insertUser (@ModelAttribute ("user") UserDTO user,  Model model){
-
+    public String insertUser (@Valid @ModelAttribute ("user") UserDTO user, BindingResult bindingResult, Model model){ //Make sure the user coming from form is @Valid
+    if (bindingResult.hasErrors()){  //if found incorrect object, show view again;
+        model.addAttribute("roles", roleService.findAll());
+        model.addAttribute("users", userService.findAll());
+        return "/user/create";
+    }
         //(user object, roles, users)
 
     model.addAttribute("user", new UserDTO()); //when we click on the save, this method executes, we need empty form. User object gone;
@@ -73,7 +81,7 @@ public class UserController {
 
 
     @PostMapping ("/update")
-    public String updateUser(@ModelAttribute("user") UserDTO user){ //I am saying, I want to use "user" attribute inside userService.update method
+    public String updateUser(@Valid @ModelAttribute("user") UserDTO user){ //I am saying, I want to use "user" attribute inside userService.update method
 
        // update that user
         //Do we have Service to update user?

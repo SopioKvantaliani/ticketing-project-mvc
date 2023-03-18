@@ -20,6 +20,15 @@ public class RoleDtoConverter implements Converter <String, RoleDTO> {
 
     @Override
     public RoleDTO convert(String source) {
+
+        if(source==null || source.equals("")){
+            return null;
+        }
+        /*
+        if user selects "select option" from dropdown menu
+         */
+
+
         return roleService.findById(Long.parseLong(source));
    // As this method has string and I am checking ""source" which is Long, we need to use this method Long.parseLong()
 
